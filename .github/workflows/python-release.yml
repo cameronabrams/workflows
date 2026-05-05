@@ -71,6 +71,11 @@ jobs:
           echo "Project version: $VER"
           test "$TAG" = "$VER" || { echo "ERROR: tag $TAG != pyproject version $VER"; exit 1; }
           grep -q "^## \[$VER\]" CHANGELOG.md || { echo "ERROR: no CHANGELOG entry for $VER"; exit 1; }
+          if [ -f CITATION.cff ]; then
+            CFF_VER="$(grep '^version:' CITATION.cff | sed 's/version: *"\(.*\)"/\1/')"
+            echo "CITATION.cff version: $CFF_VER"
+            test "$TAG" = "$CFF_VER" || { echo "ERROR: tag $TAG != CITATION.cff version $CFF_VER"; exit 1; }
+          fi
 
       - name: Clean previous builds
         run: rm -rf dist/
