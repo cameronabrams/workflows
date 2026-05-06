@@ -52,7 +52,7 @@ jobs:
         run: pip install -e ".[${{ inputs.test_extras }}]"
 
       - name: Install package
-        if: "!inputs.run_tests"
+        if: ${{ !inputs.run_tests }}
         run: pip install -e .
 
       - name: Run tests
@@ -112,7 +112,7 @@ jobs:
             dist/*.whl
 
       - name: Publish to PyPI (trusted publisher)
-        if: "!inputs.use_api_token"
+        if: ${{ !inputs.use_api_token }}
         uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Publish to PyPI (API token)
