@@ -19,14 +19,8 @@ on:
         description: "ReadTheDocs project slug; leave empty to skip RTD trigger"
         default: ""
         type: string
-      use_api_token:
-        description: "Use PYPI_API_TOKEN secret instead of trusted publisher (OIDC)"
-        default: false
-        type: boolean
     secrets:
       RTD_SECRET:
-        required: false
-      PYPI_API_TOKEN:
         required: false
 
 jobs:
@@ -111,15 +105,11 @@ jobs:
             dist/*.tar.gz
             dist/*.whl
 
-      - name: Publish to PyPI (trusted publisher)
-        if: inputs.use_api_token == false
-        uses: pypa/gh-action-pypi-publish@release/v1
-
-      - name: Publish to PyPI (API token)
-        if: inputs.use_api_token
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          name: dist
+          path: dist/
 
       - name: Trigger ReadTheDocs build
         if: inputs.rtd_slug != ''
